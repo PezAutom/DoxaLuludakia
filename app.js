@@ -14,14 +14,15 @@
 
   //  Replace With YOUR Firebase Config
 const firebaseConfig = {
-  apiKey: "YOUR_API_KEY",
-  authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
-  databaseURL: "https://YOUR_PROJECT_ID.firebaseio.com",
-  projectId: "YOUR_PROJECT_ID",
-  storageBucket: "YOUR_PROJECT_ID.appspot.com",
-  messagingSenderId: "SENDER_ID",
-  appId: "APP_ID"
+  apiKey: "AIzaSyAPLBQZC1DkzZspa4S6EYKfuV_ZaclQvyw",
+  authDomain: "doxaluludaki.firebaseapp.com",
+  databaseURL: "https://doxaluludaki-default-rtdb.europe-west1.firebasedatabase.app",
+  projectId: "doxaluludaki",
+  storageBucket: "doxaluludaki.firebasestorage.app",
+  messagingSenderId: "323416752199",
+  appId: "1:323416752199:web:6cdaff0a6ff6f26121b162"
 };
+
 
   // Initialize Firebase
   const app = initializeApp(firebaseConfig);
