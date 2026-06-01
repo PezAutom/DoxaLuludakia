@@ -23,7 +23,7 @@ const firebaseConfig = {
   appId: "1:323416752199:web:6cdaff0a6ff6f26121b162"
 };
 
-  const test = true; // Set to true to bypass auth for testing
+  const test = false; // Set to true to bypass auth for testing
 
   // Initialize Firebase
   const app = initializeApp(firebaseConfig);
