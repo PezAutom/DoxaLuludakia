@@ -23,6 +23,7 @@ const firebaseConfig = {
   appId: "1:323416752199:web:6cdaff0a6ff6f26121b162"
 };
 
+  const test = true; // Set to true to bypass auth for testing
 
   // Initialize Firebase
   const app = initializeApp(firebaseConfig);
@@ -67,7 +68,7 @@ const firebaseConfig = {
 
   // Auth state monitor
   onAuthStateChanged(auth, (user) => {
-    if (user) {
+    if (user || test) {
       authBox.style.display = "none";
       controlBox.style.display = "block";
       badge.className = "status-badge online";
@@ -115,3 +116,21 @@ const firebaseConfig = {
       lab.style.color = "#d1d1d1";
     }
   }
+
+  // tabs behavior in the UI
+const tabs = document.querySelectorAll('[data-tab-target]')
+const tabContents = document.querySelectorAll('[data-tab-content]')
+
+tabs.forEach(tab => {
+  tab.addEventListener('click', () => {
+    const target = document.querySelector(tab.dataset.tabTarget)
+    tabContents.forEach(tabContent => {
+      tabContent.classList.remove('active')
+    })
+    tabs.forEach(tab => {
+      tab.classList.remove('active')
+    })
+    tab.classList.add('active')
+    target.classList.add('active')
+  })
+})

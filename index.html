@@ -28,17 +28,40 @@
   <!-- Control UI -->
   <div id="controlBox" style="display:none;">
 
-    <button id="gpio1Btn" class="gpio-button" data-gpio="gpio1">GPIO 1</button>
-    <div id="gpio1Status" class="gpio-status">Status: OFF</div>
+    <!-- tab nel control UI -->
+    <ul class = "tabs">
+      <li data-tab-target='#home'class = "active tab">HOME</li>
+      <li data-tab-target='#water' class = "tab">Water</li>
+      <li data-tab-target='#light'class = "tab">Lights</li>
+    </ul>
 
-    <button id="gpio2Btn" class="gpio-button" data-gpio="gpio2">GPIO 2</button>
-    <div id="gpio2Status" class="gpio-status">Status: OFF</div>
+    <div class="tab-content">
+        <!-- tab HOME -->
+        <div id="home" data-tab-content class = "active">
+          <h1>HOME</h1>
+          <button id="gpio3Btn" class="gpio-button" data-gpio="test/home">Doxula</button>
+          <div id="gpio3Status" class="gpio-status">TEST: OFF</div>
+          <button id="logoutBtn" class="btn logout-btn">Logout</button>
+        </div>
+        
+        <!-- tab WATER -->
+        <div id="water" data-tab-content>
+          <h1>PLANTS</h1>
+          <button id="gpio1Btn" class="gpio-button" data-gpio="stati/pompa">Basil</button>
+          <div id="gpio1Status" class="gpio-status">Status: OFF</div>
 
-    <button id="gpio3Btn" class="gpio-button" data-gpio="gpio3">GPIO 3</button>
-    <div id="gpio3Status" class="gpio-status">Status: OFF</div>
-
-    <button id="logoutBtn" class="btn logout-btn">Logout</button>
-  </div>
+          <button id="gpio1Btn2" class="gpio-button" data-gpio="test/gpio1">Orchid</button>
+          <div id="gpio1Status2" class="gpio-status">Status: OFF</div>
+        </div>
+        
+        <!-- tab LUCI -->
+        <div id="light" data-tab-content>
+          <h1>LUCI</h1>
+          <button id="gpio2Btn" class="gpio-button" data-gpio="test/luci">LIGHTS 1</button>
+          <div id="gpio2Status" class="gpio-status">Status: OFF</div>
+        </div>
+        
+    </div> 
 
 </div>
 
