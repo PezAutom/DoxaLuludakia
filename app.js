@@ -50,6 +50,8 @@ const firebaseConfig = {
     gpio3: document.getElementById("gpio3Status")
   };
 
+  const buttons = document.querySelectorAll(".gpio-button");
+
   // Login
   loginBtn.onclick = async () => {
     authMsg.textContent = "";
@@ -84,7 +86,8 @@ const firebaseConfig = {
 
   // Listen to DB
   function startListeners() {
-    ["gpio1", "gpio2", "gpio3"].forEach((key) => {
+    buttons.forEach((btn) => {
+      let key = btn.dataset.gpio;
       onValue(ref(db, "/" + key), (snapshot) => {
         let value = snapshot.val() ? 1 : 0;
         updateUI(key, value);
