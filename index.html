@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>ESP32 GPIO Controller</title>
+<title>HOME AUTOMATIONS</title>
 
 <link rel="stylesheet" href="styles.css">
 <script type="module" src="app.js"></script>
@@ -14,9 +14,12 @@
 
 <div class="card">
 
-  <h1>ESP32 GPIO Control</h1>
-  <div id="statusBadge" class="status-badge offline">Offline</div>
+  <div class="card-header">
+    <h1>HOME AUTOMATIONS</h1>
+    <div id="statusBadge" class="status-badge offline">Offline</div>
+  </div>
 
+  <div class="card-body">
   <!-- Login UI -->
   <div id="authBox">
     <input id="emailField" type="email" placeholder="Email" />
@@ -27,13 +30,6 @@
 
   <!-- Control UI -->
   <div id="controlBox" style="display:none;">
-
-    <!-- tab nel control UI -->
-    <ul class = "tabs">
-      <li data-tab-target='#home'class = "active tab">HOME</li>
-      <li data-tab-target='#water' class = "tab">Water</li>
-      <li data-tab-target='#light'class = "tab">Lights</li>
-    </ul>
 
     <div class="tab-content">
         <!-- tab HOME -->
@@ -47,8 +43,24 @@
         <!-- tab WATER -->
         <div id="water" data-tab-content>
           <h1>PLANTS</h1>
+
+          <div class="water-chart-card">
+            <h2>Moisture Level</h2>
+            <canvas id="waterChart" width="340" height="220"></canvas>
+            <div id="waterChartMsg" class="chart-msg">Loading...</div>
+          </div>
+
           <button id="gpio1Btn" class="gpio-button" data-gpio="stati/pompa">Basil</button>
           <div id="gpio1Status" class="gpio-status">Status: OFF</div>
+
+          <!-- Pump timer slider: 0 - 15 seconds -->
+          <div class="pump-slider-card">
+            <label for="pumpSlider">Pump timer</label>
+            <div class="slider-wrap">
+              <input id="pumpSlider" type="range" min="0" max="15" step="1" value="6">
+              <div id="pumpSliderValue" class="slider-value">6s</div>
+            </div>
+          </div>
 
           <button id="gpio1Btn2" class="gpio-button" data-gpio="test/gpio1">Orchid</button>
           <div id="gpio1Status2" class="gpio-status">Status: OFF</div>
@@ -61,7 +73,16 @@
           <div id="gpio2Status" class="gpio-status">Status: OFF</div>
         </div>
         
-    </div> 
+    </div>
+
+  </div> <!-- .card-body -->
+
+  <!-- tab nel control UI (fixed footer inside card) -->
+  <ul class = "tabs">
+    <li data-tab-target='#home' class = "active tab">HOME</li>
+    <li data-tab-target='#water' class = "tab">Water</li>
+    <li data-tab-target='#light' class = "tab">Lights</li>
+  </ul>
 
 </div>
 
