@@ -31,109 +31,95 @@ const firebaseConfig = {
   const db = getDatabase(app);
 
   // UI elements
-  const authBox = document.getElementById("authBox");
-  const controlBox = document.getElementById("controlBox");
-  const loginBtn = document.getElementById("loginBtn");
-  const logoutBtn = document.getElementById("logoutBtn");
-  const authMsg = document.getElementById("authMsg");
-  const badge = document.getElementById("statusBadge");
+  window.addEventListener("DOMContentLoaded", () => {
+    const authBox = document.getElementById("authBox");
+    const controlBox = document.getElementById("controlBox");
+    const loginBtn = document.getElementById("loginBtn");
+    const logoutBtn = document.getElementById("logoutBtn");
+    const authMsg = document.getElementById("authMsg");
+    const badge = document.getElementById("statusBadge");
+    const buttons = document.querySelectorAll(".gpio-button");
 
-  const gpioButtons = {
-    gpio1: document.getElementById("gpio1Btn"),
-    gpio2: document.getElementById("gpio2Btn"),
-    gpio3: document.getElementById("gpio3Btn")
-  };
+    // Login
+    loginBtn.onclick = async () => {
+      authMsg.textContent = "";
+      try {
+        await signInWithEmailAndPassword(
+          auth,
+          document.getElementById("emailField").value,
+          document.getElementById("passwordField").value
+        );
+      } catch (e) {
+        authMsg.textContent = e.message;
+      }
+    };
 
-  const gpioLabels = {
-    gpio1: document.getElementById("gpio1Status"),
-    gpio2: document.getElementById("gpio2Status"),
-    gpio3: document.getElementById("gpio3Status")
-  };
+    logoutBtn.onclick = () => signOut(auth);
 
-  const buttons = document.querySelectorAll(".gpio-button");
+    // Auth state monitor
+    onAuthStateChanged(auth, (user) => {
+      if (user || test) {
+        authBox.style.display = "none";
+        controlBox.style.display = "block";
+        badge.className = "status-badge online";
+        badge.textContent = "Online";
+        startListeners();
+      } else {
+        authBox.style.display = "block";
+        controlBox.style.display = "none";
+        badge.className = "status-badge offline";
+        badge.textContent = "Offline";
+      }
+    });
 
-  // Login
-  loginBtn.onclick = async () => {
-    authMsg.textContent = "";
-    try {
-      await signInWithEmailAndPassword(
-        auth,
-        document.getElementById("emailField").value,
-        document.getElementById("passwordField").value
-      );
-    } catch (e) {
-      authMsg.textContent = e.message;
+    // Listen to DB
+    function startListeners() {
+      buttons.forEach((btn) => {
+        const key = btn.dataset.gpio;
+        if (!key) return;
+
+        onValue(ref(db, "/" + key), (snapshot) => {
+          const value = snapshot.val() ? 1 : 0;
+          updateUI(btn, value);
+        });
+
+        btn.onclick = () => {
+          const newState = btn.classList.contains("on") ? 0 : 1;
+          set(ref(db, "/" + key), newState);
+        };
+      });
     }
-  };
 
-  logoutBtn.onclick = () => signOut(auth);
+    function updateUI(btn, val) {
+      const lab = btn.nextElementSibling;
+      if (!lab) return;
 
-  // Auth state monitor
-  onAuthStateChanged(auth, (user) => {
-    if (user || test) {
-      authBox.style.display = "none";
-      controlBox.style.display = "block";
-      badge.className = "status-badge online";
-      badge.textContent = "Online";
-      startListeners();
-    } else {
-      authBox.style.display = "block";
-      controlBox.style.display = "none";
-      badge.className = "status-badge offline";
-      badge.textContent = "Offline";
+      if (val === 1) {
+        btn.classList.add("on");
+        lab.textContent = "Status: ON";
+        lab.style.color = "#9effae";
+      } else {
+        btn.classList.remove("on");
+        lab.textContent = "Status: OFF";
+        lab.style.color = "#d1d1d1";
+      }
     }
-  });
 
-  // Listen to DB
-  function startListeners() {
-    buttons.forEach((btn) => {
-      let key = btn.dataset.gpio;
-      onValue(ref(db, "/" + key), (snapshot) => {
-        let value = snapshot.val() ? 1 : 0;
-        updateUI(key, value);
+    // tabs behavior in the UI
+    const tabs = document.querySelectorAll('[data-tab-target]');
+    const tabContents = document.querySelectorAll('[data-tab-content]');
+
+    tabs.forEach(tab => {
+      tab.addEventListener('click', () => {
+        const target = document.querySelector(tab.dataset.tabTarget);
+        tabContents.forEach(tabContent => {
+          tabContent.classList.remove('active');
+        });
+        tabs.forEach(tab => {
+          tab.classList.remove('active');
+        });
+        tab.classList.add('active');
+        target.classList.add('active');
       });
     });
-
-    // Button click
-    Object.values(gpioButtons).forEach((btn) => {
-      btn.onclick = () => {
-        let gpio = btn.dataset.gpio;
-        let newState = btn.classList.contains("on") ? 0 : 1;
-        set(ref(db, "/" + gpio), newState);
-      };
-    });
-  }
-
-  // Update UI
-  function updateUI(key, val) {
-    let btn = gpioButtons[key];
-    let lab = gpioLabels[key];
-
-    if (val === 1) {
-      btn.classList.add("on");
-      lab.textContent = "Status: ON";
-      lab.style.color = "#9effae";
-    } else {
-      btn.classList.remove("on");
-      lab.textContent = "Status: OFF";
-      lab.style.color = "#d1d1d1";
-    }
-  }
-
-  // tabs behavior in the UI
-const tabs = document.querySelectorAll('[data-tab-target]')
-const tabContents = document.querySelectorAll('[data-tab-content]')
-
-tabs.forEach(tab => {
-  tab.addEventListener('click', () => {
-    const target = document.querySelector(tab.dataset.tabTarget)
-    tabContents.forEach(tabContent => {
-      tabContent.classList.remove('active')
-    })
-    tabs.forEach(tab => {
-      tab.classList.remove('active')
-    })
-    tab.classList.add('active')
-    target.classList.add('active')
-  })
-})
+  });
